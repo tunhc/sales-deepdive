@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ethika Amazon Sales Analysis 2024‑2026</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{--c24:#3b82f6;--c25:#f59e0b;--c26:#10b981;--bg:#0f172a;--card:#1e293b;--card2:#273549;--txt:#e2e8f0;--muted:#94a3b8}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--txt);font-family:'Segoe UI',system-ui,sans-serif;font-size:14px;padding:24px 28px}
+h1{font-size:22px;font-weight:700;margin-bottom:4px}
+.sub{color:var(--muted);font-size:13px;margin-bottom:24px}
+.nav{display:flex;gap:8px;margin-bottom:24px;flex-wrap:wrap}
+.nav button{background:var(--card2);border:none;color:var(--muted);padding:8px 16px;border-radius:6px;cursor:pointer;font-size:13px;font-weight:500;transition:.15s}
+.nav button.active,.nav button:hover{background:#3b82f6;color:#fff}
+.sec{display:none}.sec.active{display:block}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:24px}
+.kpi{background:var(--card);border-radius:10px;padding:16px 18px;border-left:4px solid var(--c24)}
+.kpi.y25{border-left-color:var(--c25)}.kpi.y26{border-left-color:var(--c26)}
+.kpi .lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.kpi .val{font-size:24px;font-weight:700}
+.kpi .sm{font-size:11px;color:var(--muted);margin-top:3px}
+.badge{display:inline-block;padding:2px 7px;border-radius:4px;font-size:11px;font-weight:600;margin-top:4px}
+.dn{background:#7f1d1d;color:#fca5a5}.up{background:#14532d;color:#86efac}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px}
+.g1{margin-bottom:18px}
+@media(max-width:860px){.g2{grid-template-columns:1fr}}
+.card{background:var(--card);border-radius:10px;padding:18px}
+.card h3{font-size:13px;font-weight:600;margin-bottom:3px}
+.card .hint{font-size:11px;color:var(--muted);margin-bottom:12px}
+canvas{max-height:300px}
+.ins{border-left:3px solid #3b82f6;background:#1e3a5f;padding:12px 14px;border-radius:0 8px 8px 0;margin-bottom:12px;font-size:13px;line-height:1.6}
+.ins.w{border-left-color:#f59e0b;background:#422006}
+.ins.g{border-left-color:#22c55e;background:#14432a}
+.ins b{color:#93c5fd}.ins.w b{color:#fcd34d}.ins.g b{color:#86efac}
+.sec-h{font-size:17px;font-weight:700;margin-bottom:3px}
+.sec-s{font-size:12px;color:var(--muted);margin-bottom:18px}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{background:var(--card2);padding:7px 10px;text-align:left;font-weight:600;color:var(--muted);font-size:10px;text-transform:uppercase}
+td{padding:6px 10px;border-bottom:1px solid #1e293b}
+tr:hover td{background:var(--card2)}
+.tag{display:inline-block;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:600}
+.tm{background:#1d4ed8;color:#bfdbfe}.tb{background:#065f46;color:#a7f3d0}
+ol.actions{list-style:none;counter-reset:ac}
+ol.actions li{counter-increment:ac;background:var(--card);border-radius:8px;padding:13px 14px 13px 48px;margin-bottom:10px;position:relative;font-size:13px;line-height:1.6}
+ol.actions li::before{content:counter(ac);position:absolute;left:14px;top:50%;transform:translateY(-50%);background:#3b82f6;color:#fff;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:11px}
+.pb{display:inline-block;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:700;margin-left:6px}
+.ph{background:#7f1d1d;color:#fca5a5}.pm{background:#78350f;color:#fde68a}.pl{background:#1e3a5f;color:#93c5fd}
+</style>
+</head>
+<body>
+<h1>📊 Ethika Amazon — Sales Performance Report</h1>
+<p class="sub">Full Year 2024 &amp; 2025 · 2026 YTD (Jan–May) &nbsp;|&nbsp; All figures in USD</p>
+<div class="nav">
+  <button class="active" onclick="show('ov',this)">Overview</button>
+  <button onclick="show('mo',this)">Monthly Trends</button>
+  <button onclick="show('dv',this)">Divisions</button>
+  <button onclick="show('as',this)">ASP &amp; Pricing</button>
+  <button onclick="show('pr',this)">Promotions</button>
+  <button onclick="show('iv',this)">Inventory Gaps</button>
+  <button onclick="show('ac',this)">Action Plan</button>
+</div>
+
+<!-- OVERVIEW -->
+<div id="ov" class="sec active">
+  <div class="sec-h">Overall Performance</div>
+  <div class="sec-s">Why 2024 outperformed — key metrics at a glance</div>
+  <div class="kpis" id="kpi-row"></div>
+  <div class="g2">
+    <div class="card"><h3>Annual Revenue</h3><p class="hint">Full year 2024 &amp; 2025 · 2026 YTD</p><canvas id="c-arev"></canvas></div>
+    <div class="card"><h3>Units Sold vs ASP</h3><p class="hint">Volume collapsed as prices rose 32%</p><canvas id="c-uasp"></canvas></div>
+  </div>
+  <div class="ins"><b>Finding #1 — ASP increase drove the entire gap.</b> 2024 ASP $16.09 vs 2025 $21.29 (+32%). Units dropped 69% (657k→207k). Revenue fell 58% ($10.6M→$4.4M). Customers are highly price-elastic for basic staples.</div>
+  <div class="ins w"><b>Finding #2 — December 2024 alone = $2.04M (114k units).</b> The Q4 holiday push accounted for 19% of full-year 2024 revenue. 2025 December was only $473k (−77%). Aggressive holiday pricing was the single biggest driver.</div>
+  <div class="ins w"><b>Finding #3 — Boys division collapsed 78%.</b> Boys: $3.78M (2024) → $820k (2025). Boys Carryover specifically dropped 82%. Mens fell 47% ($6.55M→$3.44M).</div>
+  <div class="ins g"><b>Finding #4 — 2025 ran zero promotions for 4 months straight (May–Aug).</b> 2024 ran $8–13k/month every single month. This absence directly suppressed unit volume in H2 2025.</div>
+</div>
+
+<!-- MONTHLY -->
+<div id="mo" class="sec">
+  <div class="sec-h">Monthly Revenue &amp; Volume Trends</div>
+  <div class="sec-s">Month-by-month comparison — identifying when and why 2024 spiked</div>
+  <div class="g1 card"><h3>Monthly Revenue — All Years</h3><p class="hint">2024 (blue) · 2025 (amber) · 2026 (green, YTD May)</p><canvas id="c-mrev" style="max-height:340px"></canvas></div>
+  <div class="g2">
+    <div class="card"><h3>Monthly Units Sold</h3><p class="hint">Gap widens after Q1 2024</p><canvas id="c-muni"></canvas></div>
+    <div class="card"><h3>2024 Monthly Index (100 = avg month)</h3><p class="hint">Jul &amp; Dec driven by Prime Day + Holiday push</p><canvas id="c-midx"></canvas></div>
+  </div>
+  <div class="ins"><b>2024 pattern:</b> Stable Q1–Q2 ($660–870k/mo) → July Prime Day spike ($1.02M) → Sep dip ($540k) → Nov/Dec mega push ($948k / $2.04M).</div>
+  <div class="ins w"><b>2025 missed all key events:</b> No Prime Day uplift (Jul 2025 = $355k vs $1.02M), flat Nov ($214k vs $948k), Dec only $473k vs $2.04M.</div>
+</div>
+
+<!-- DIVISION -->
+<div id="dv" class="sec">
+  <div class="sec-h">Division &amp; Lifecycle Breakdown</div>
+  <div class="sec-s">Mens &amp; Boys = 97%+ of revenue — tracking lifecycle declines</div>
+  <div class="g2">
+    <div class="card"><h3>Revenue by Division</h3><p class="hint">Grouped by year</p><canvas id="c-drev"></canvas></div>
+    <div class="card"><h3>Mens — Carryover vs Seasonal Revenue</h3><p class="hint">2024 vs 2025</p><canvas id="c-mlc"></canvas></div>
+  </div>
+  <div class="g2">
+    <div class="card"><h3>Boys — Carryover vs Seasonal Revenue</h3><p class="hint">Boys Carryover dropped 82% in 2025</p><canvas id="c-blc"></canvas></div>
+    <div class="card"><h3>ASP Grid — Mens &amp; Boys by Lifecycle</h3><p class="hint">Price increase by category</p><canvas id="c-aspg"></canvas></div>
+  </div>
+  <div class="ins w"><b>Boys Carryover: $2.64M → $483k (−82%).</b> 192k units at $13.73 ASP → 32k units at $15.16. UBS744 (Blackout) alone drove 8k+ units in 2024.</div>
+  <div class="ins"><b>Mens Carryover is the biggest opportunity:</b> $4.64M → $2.91M (−37%). ASP jumped $18 → $24. Restoring pricing on Mens Solid/DNA carryover SKUs is the highest-impact action.</div>
+</div>
+
+<!-- ASP -->
+<div id="as" class="sec">
+  <div class="sec-h">ASP &amp; Pricing Analysis</div>
+  <div class="sec-s">Price changes by product group — where 2024's pricing advantage came from</div>
+  <div class="g2">
+    <div class="card"><h3>ASP by Division &amp; Lifecycle</h3><p class="hint">30%+ price jump from 2024→2025 across all categories</p><canvas id="c-adl"></canvas></div>
+    <div class="card"><h3>Price–Volume Relationship</h3><p class="hint">Lower price = dramatically more units</p><canvas id="c-pvu"></canvas></div>
+  </div>
+  <div class="g1 card"><h3>ASP by Product Group — 2024 vs 2025 vs 2026</h3><p class="hint">Solid, DNA, Urban/Street carryover saw 30–40% price increases</p><canvas id="c-apg" style="max-height:270px"></canvas></div>
+  <div class="ins w"><b>Core volume drivers had ASP surge 30–40%:</b> Solid Carryover $14.33→$18.86 (+32%), DNA Carryover $17.76→$23.34 (+31%), Urban/Street Seasonal $15.41→$21.33 (+38%).</div>
+  <div class="ins"><b>The edge was listing price, not promos.</b> Promo discounts explain only $0.30/unit difference. The remaining $4+ ASP gap came entirely from lower base listing prices in 2024.</div>
+</div>
+
+<!-- PROMO -->
+<div id="pr" class="sec">
+  <div class="sec-h">Promotion &amp; Discount Analysis</div>
+  <div class="sec-s">Monthly breakdown — 2024 ran promos every month, 2025 stopped for 4 months</div>
+  <div class="g2">
+    <div class="card"><h3>Promo Discount % of Revenue</h3><p class="hint">2025 flatlined at 0% for May–Aug</p><canvas id="c-ppc"></canvas></div>
+    <div class="card"><h3>Promo Discount per Unit ($)</h3><p class="hint">2025 Q2–Q3 had essentially no per-unit discount</p><canvas id="c-ppu"></canvas></div>
+  </div>
+  <div class="ins"><b>2024 promo cadence:</b> $8–13k/month every month. Consistent 1–2% promo rate year-round.</div>
+  <div class="ins w"><b>2025 completely stopped May–Aug:</b> $0 promo for June, July, August. Those months averaged $355–376k revenue vs 2024's $750–1,020k.</div>
+  <div class="ins g"><b>Budget ~$120–130k/year</b> in coupon/deal fees spread across all 12 months. Focus on: coupons on Solid staples monthly, Lightning Deals for Prime Day in July, %-off promos in Sep–Oct slow months.</div>
+</div>
+
+<!-- INVENTORY -->
+<div id="iv" class="sec">
+  <div class="sec-h">Inventory Gap Analysis</div>
+  <div class="sec-s">Current FBA stock vs 3-month coverage at 2024 monthly velocity</div>
+  <div class="g2">
+    <div class="card"><h3>Top 15 Styles — Inventory Gap</h3><p class="hint">Blue=Mens · Green=Boys · Gap = needed minus available</p><canvas id="c-igap" style="max-height:400px"></canvas></div>
+    <div class="card"><h3>Total Gap by Division</h3><p class="hint">Mens needs 19k units · Boys needs 10k units</p><canvas id="c-idiv"></canvas></div>
+  </div>
+  <div class="g1 card">
+    <h3>Inventory Gap Detail</h3><p class="hint">Sorted by gap size</p>
+    <div style="overflow-x:auto;margin-top:10px"><table id="inv-tbl"></table></div>
+  </div>
+  <div class="ins w"><b>29k total units understocked.</b> Top 5 critical: UMS211 (gap 335), UMS1054 (244), UMS1641 (200), UBS744 (178), UMS1658 (165). All top-10 SKUs by 2024 volume — stockouts suppress ranking and Buy Box directly.</div>
+</div>
+
+<!-- ACTION PLAN -->
+<div id="ac" class="sec">
+  <div class="sec-h">Action Plan — Reaching 2024 Revenue Levels</div>
+  <div class="sec-s">8 specific actions ranked by priority and expected impact</div>
+  <div class="ins g" style="margin-bottom:18px"><b>Root Cause:</b> 2024 revenue was driven by (1) 30% lower listing prices on core staples, (2) consistent monthly promos every month, (3) Prime Day + Q4 holiday surge. Fixing all three in 2026 can realistically recover $5–8M in annual revenue.</div>
+  <ol class="actions">
+    <li><b>Reprice core Solid/DNA carryover styles to 2024 ASP levels</b><span class="pb ph">HIGH</span><br>Current Mens Carryover ASP: $23.62. Target: $16–18. Test repricing UMS211, UMS1054, UMS1640, UMS1649, UMS1651, UMS657, UMS1645, UMS1658 to $14–17. Expected: 30–50% unit volume uplift. Estimate +$800k–1.2M revenue/year.</li>
+    <li><b>Emergency restock top 10 stockout styles</b><span class="pb ph">HIGH</span><br>Critical: UMS211 (−335), UMS1054 (−244), UMS1641 (−200), UBS744 (−178), UMS1658 (−165), UBS1037 (−153), UMS228 (−149), UMM690 (−143), UMM1658 (−132), UBS721 (−131). Ship minimum 3× monthly 2024 velocity, target 5,000+ units.</li>
+    <li><b>Reinstate monthly promotional cadence — every single month</b><span class="pb ph">HIGH</span><br>Run 10–15% coupon OR % deal on Boys + Mens Solid carryover every month. Budget $10–13k/month ($120–130k/year). Focus: Jan (slow start), Sep–Oct (historically weakest months).</li>
+    <li><b>Build a Prime Day 2026 campaign (July)</b><span class="pb ph">HIGH</span><br>July 2024 = $1.02M. July 2025 = $355k. Gap: $665k. Run Lightning Deals + 20% coupons on top Boys/Mens SKUs. Submit deals 6 weeks in advance. Ensure 4× normal FBA stock before July 1.</li>
+    <li><b>Q4 Holiday Push — plan starts October</b><span class="pb ph">HIGH</span><br>Dec 2024 = $2.04M. Plan: lower base prices Oct 1, run Black Friday Outlet deals (submit by Sep 15), Cyber Monday coupons. Ensure 3× normal FBA stock by Oct 1. Target Dec 2026: $1.5M minimum.</li>
+    <li><b>Fix Boys Carryover — UBS744 restock + promo combo</b><span class="pb pm">MEDIUM</span><br>Boys Carryover dropped 82%. UBS744-BKK (Blackout) was #1 SKU in 2024 with 4,012+ units. Restock all sizes, run 15% coupon for 30 days to rebuild organic rank. Target: 200+ units/month velocity.</li>
+    <li><b>Brand Tailored Promotions for repeat buyers</b><span class="pb pm">MEDIUM</span><br>Target past 12-month purchasers with 10% off on restocked carryover styles. Zero upfront cost. Especially effective for Mens Solid with high repeat rate.</li>
+    <li><b>Boys Seasonal listing quality audit</b><span class="pb pl">LOW</span><br>Boys Seasonal only saw +8% ASP increase but still dropped 73%. Pricing may not be the issue — investigate listing quality, images, and ad coverage before price changes.</li>
+  </ol>
+</div>
+
+<script>
+const D = {"months":["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],"rev24":[662362.61,770585.75,863702.68,658572.41,750268.88,805386.14,1019874.36,813681.77,539917.7,696517.48,947612.48,2045212.4],"rev25":[433111.98,429690.28,461404.77,534385.22,349733.66,376607.03,355120.7,368314.48,222246.18,180975.64,213894.45,473015.52],"rev26":[194343.79,214689.6,271131.38,268230.91,58999.31,0,0,0,0,0,0,0],"units24":[42915,50796,56170,41995,47679,51373,67549,51341,34255,42879,55948,114363],"units25":[23523,21241,23048,27021,15878,16418,15429,16073,9664,7814,9648,20885],"units26":[9978,10496,13713,13573,3158,0,0,0,0,0,0,0],"promo_pct24":[2.01,1.11,1.48,1.31,1.37,1.41,0.98,1.42,1.85,1.7,0.83,0.64],"promo_pct25":[1.21,1.79,1.9,2.46,0.03,0.0,0.0,0.0,0.48,1.64,0.48,1.25],"promo_pct26":[1.35,0.89,0.54,0.14,0.07,0,0,0,0,0,0,0],"promo_pu24":[0.31,0.169,0.227,0.206,0.215,0.221,0.148,0.225,0.291,0.276,0.141,0.115],"promo_pu25":[0.224,0.363,0.381,0.486,0.007,0.0,0.0,0.0,0.11,0.38,0.106,0.284],"overall":{"2024":{"rev":10573694.65,"units":657263,"asp":16.09,"promo":129292.17},"2025":{"rev":4398499.91,"units":206642,"asp":21.29,"promo":45975.24},"2026":{"rev":1007395.0,"units":50918,"asp":19.78,"promo":6418.93}},"div_rev":{"2024":{"Accessories":9356.67,"Boys":3784890.93,"Mens":6553097.16,"T":105.0,"Womens":226244.89},"2025":{"Accessories":24886.7,"Boys":820003.51,"Girls":16851.0,"Mens":3436047.24,"T":12881.64,"Womens":87829.83},"2026":{"Accessories":3721.53,"Boys":241876.08,"Girls":6241.39,"Mens":631993.93,"T":2116.56,"Unknown":103618.52,"Womens":17826.99}},"asp_grid":[["2024 Carryover",18.12,13.73],["2024 Seasonal",16.46,14.1],["2025 Carryover",23.62,15.16],["2025 Seasonal",24.67,15.22],["2026 Carryover",22.58,13.12],["2026 Seasonal",24.5,15.05]],"lc_div":[{"year":"2024","division":"Accessories","lifecycle":"Carryover","revenue":9306.67,"units":364,"asp":25.57},{"year":"2024","division":"Accessories","lifecycle":"Seasonal","revenue":50.0,"units":1,"asp":50.0},{"year":"2024","division":"Boys","lifecycle":"Carryover","revenue":2637145.13,"units":192117,"asp":13.73},{"year":"2024","division":"Boys","lifecycle":"Seasonal","revenue":1147745.8,"units":81427,"asp":14.1},{"year":"2024","division":"Mens","lifecycle":"Carryover","revenue":4635529.18,"units":255832,"asp":18.12},{"year":"2024","division":"Mens","lifecycle":"Seasonal","revenue":1917567.98,"units":116524,"asp":16.46},{"year":"2024","division":"T","lifecycle":"Carryover","revenue":105.0,"units":21,"asp":5.0},{"year":"2024","division":"Womens","lifecycle":"Carryover","revenue":155192.53,"units":7335,"asp":21.16},{"year":"2024","division":"Womens","lifecycle":"Seasonal","revenue":71052.36,"units":3642,"asp":19.51},{"year":"2025","division":"Accessories","lifecycle":"Carryover","revenue":24692.7,"units":1058,"asp":23.34},{"year":"2025","division":"Accessories","lifecycle":"Seasonal","revenue":194.0,"units":4,"asp":48.5},{"year":"2025","division":"Boys","lifecycle":"Carryover","revenue":482586.96,"units":31828,"asp":15.16},{"year":"2025","division":"Boys","lifecycle":"Seasonal","revenue":337416.54,"units":22166,"asp":15.22},{"year":"2025","division":"Girls","lifecycle":"Carryover","revenue":16677.0,"units":927,"asp":17.99},{"year":"2025","division":"Girls","lifecycle":"Seasonal","revenue":174.0,"units":5,"asp":34.8},{"year":"2025","division":"Mens","lifecycle":"Carryover","revenue":2911503.71,"units":123242,"asp":23.62},{"year":"2025","division":"Mens","lifecycle":"Seasonal","revenue":524543.53,"units":21261,"asp":24.67},{"year":"2025","division":"T","lifecycle":"Carryover","revenue":4940.34,"units":856,"asp":5.77},{"year":"2025","division":"T","lifecycle":"Seasonal","revenue":7941.29,"units":1322,"asp":6.01},{"year":"2025","division":"Womens","lifecycle":"Carryover","revenue":86142.9,"units":3926,"asp":21.94},{"year":"2025","division":"Womens","lifecycle":"Seasonal","revenue":1686.93,"units":47,"asp":35.89},{"year":"2026","division":"Accessories","lifecycle":"Carryover","revenue":3563.53,"units":147,"asp":24.24},{"year":"2026","division":"Accessories","lifecycle":"Seasonal","revenue":158.0,"units":4,"asp":39.5},{"year":"2026","division":"Boys","lifecycle":"Carryover","revenue":91168.31,"units":6949,"asp":13.12},{"year":"2026","division":"Boys","lifecycle":"Seasonal","revenue":150707.77,"units":10016,"asp":15.05},{"year":"2026","division":"Girls","lifecycle":"Carryover","revenue":6193.39,"units":358,"asp":17.3},{"year":"2026","division":"Girls","lifecycle":"Seasonal","revenue":48.0,"units":2,"asp":24.0},{"year":"2026","division":"Mens","lifecycle":"Carryover","revenue":356281.32,"units":15779,"asp":22.58},{"year":"2026","division":"Mens","lifecycle":"Seasonal","revenue":275712.61,"units":11254,"asp":24.5},{"year":"2026","division":"T","lifecycle":"Carryover","revenue":1750.56,"units":292,"asp":6.0},{"year":"2026","division":"T","lifecycle":"Seasonal","revenue":366.0,"units":61,"asp":6.0},{"year":"2026","division":"Unknown","lifecycle":"Seasonal","revenue":103618.52,"units":5258,"asp":19.71},{"year":"2026","division":"Womens","lifecycle":"Carryover","revenue":9788.11,"units":464,"asp":21.1},{"year":"2026","division":"Womens","lifecycle":"Seasonal","revenue":8038.88,"units":334,"asp":24.07}],"asp_pg":[{"year":"2024","prod_group":"Accessories","lifecycle":"Carryover","revenue":6618.8725,"units":265,"asp":24.98},{"year":"2024","prod_group":"Accessories","lifecycle":"Seasonal","revenue":29.95,"units":1,"asp":29.95},{"year":"2024","prod_group":"Animal","lifecycle":"Carryover","revenue":948362.5819999999,"units":55427,"asp":17.11},{"year":"2024","prod_group":"Animal","lifecycle":"Seasonal","revenue":533732.936,"units":34107,"asp":15.65},{"year":"2024","prod_group":"Beanie","lifecycle":"Carryover","revenue":428.0,"units":19,"asp":22.53},{"year":"2024","prod_group":"City Scape","lifecycle":"Carryover","revenue":182137.0925,"units":10843,"asp":16.8},{"year":"2024","prod_group":"City Scape","lifecycle":"Seasonal","revenue":154299.054,"units":9521,"asp":16.21},{"year":"2024","prod_group":"Collab","lifecycle":"Carryover","revenue":34420.53,"units":2187,"asp":15.74},{"year":"2024","prod_group":"Collab","lifecycle":"Seasonal","revenue":47913.761999999995,"units":3313,"asp":14.46},{"year":"2024","prod_group":"DNA","lifecycle":"Carryover","revenue":2867526.3024999998,"units":161432,"asp":17.76},{"year":"2024","prod_group":"DNA","lifecycle":"Seasonal","revenue":1772816.9235,"units":114429,"asp":15.49},{"year":"2024","prod_group":"Embossed","lifecycle":"Carryover","revenue":7408.209,"units":303,"asp":24.45},{"year":"2024","prod_group":"Event","lifecycle":"Carryover","revenue":75323.2205,"units":4909,"asp":15.34},{"year":"2024","prod_group":"Event","lifecycle":"Seasonal","revenue":95905.7285,"units":6177,"asp":15.53},{"year":"2024","prod_group":"Frame","lifecycle":"Seasonal","revenue":6821.2300000000005,"units":417,"asp":16.36},{"year":"2024","prod_group":"Not Applicable","lifecycle":"Carryover","revenue":12028.5345,"units":1061,"asp":11.34},{"year":"2024","prod_group":"Pant","lifecycle":"Carryover","revenue":210.0,"units":5,"asp":42.0},{"year":"2024","prod_group":"Photo Reel","lifecycle":"Carryover","revenue":248113.356,"units":14680,"asp":16.9},{"year":"2024","prod_group":"Photo Reel","lifecycle":"Seasonal","revenue":114166.333,"units":7905,"asp":14.44},{"year":"2024","prod_group":"Print","lifecycle":"Carryover","revenue":112243.73049999999,"units":6356,"asp":17.66},{"year":"2024","prod_group":"Print","lifecycle":"Seasonal","revenue":177499.2485,"units":10282,"asp":17.26},{"year":"2024","prod_group":"Shirt","lifecycle":"Carryover","revenue":124.0,"units":2,"asp":62.0},{"year":"2024","prod_group":"Solid","lifecycle":"Carryover","revenue":2319567.964,"units":161910,"asp":14.33},{"year":"2024","prod_group":"Solid","lifecycle":"Seasonal","revenue":33301.1995,"units":2493,"asp":13.36},{"year":"2024","prod_group":"Towel","lifecycle":"Carryover","revenue":126.0,"units":3,"asp":42.0},{"year":"2024","prod_group":"Urban/Street","lifecycle":"Carryover","revenue":475628.63899999997,"units":28316,"asp":16.8},{"year":"2024","prod_group":"Urban/Street","lifecycle":"Seasonal","revenue":198296.3065,"units":12865,"asp":15.41},{"year":"2025","prod_group":"Accessories","lifecycle":"Carryover","revenue":14417.213,"units":646,"asp":22.32},{"year":"2025","prod_group":"Accessories","lifecycle":"Seasonal","revenue":42.0,"units":2,"asp":21.0},{"year":"2025","prod_group":"Animal","lifecycle":"Carryover","revenue":266150.5325,"units":11510,"asp":23.12},{"year":"2025","prod_group":"Animal","lifecycle":"Seasonal","revenue":114961.182,"units":6250,"asp":18.39},{"year":"2025","prod_group":"Beanie","lifecycle":"Carryover","revenue":2696.36,"units":114,"asp":23.65},{"year":"2025","prod_group":"City Scape","lifecycle":"Carryover","revenue":87572.43699999999,"units":3905,"asp":22.43},{"year":"2025","prod_group":"City Scape","lifecycle":"Seasonal","revenue":54185.723999999995,"units":2785,"asp":19.46},{"year":"2025","prod_group":"Collab","lifecycle":"Carryover","revenue":24661.581,"units":938,"asp":26.29},{"year":"2025","prod_group":"Collab","lifecycle":"Seasonal","revenue":6620.7,"units":266,"asp":24.89},{"year":"2025","prod_group":"DNA","lifecycle":"Carryover","revenue":1215556.868,"units":52082,"asp":23.34},{"year":"2025","prod_group":"DNA","lifecycle":"Seasonal","revenue":357883.7735,"units":19195,"asp":18.64},{"year":"2025","prod_group":"Embossed","lifecycle":"Carryover","revenue":75342.11349999999,"units":3162,"asp":23.83},{"year":"2025","prod_group":"Event","lifecycle":"Carryover","revenue":30275.185999999998,"units":1253,"asp":24.16},{"year":"2025","prod_group":"Event","lifecycle":"Seasonal","revenue":9109.454,"units":409,"asp":22.27},{"year":"2025","prod_group":"Floral","lifecycle":"Carryover","revenue":719.0,"units":33,"asp":21.79},{"year":"2025","prod_group":"Floral","lifecycle":"Seasonal","revenue":25131.085,"units":1131,"asp":22.22},{"year":"2025","prod_group":"Frame","lifecycle":"Seasonal","revenue":18.0,"units":1,"asp":18.0},{"year":"2025","prod_group":"Not Applicable","lifecycle":"Carryover","revenue":34342.293,"units":3019,"asp":11.38},{"year":"2025","prod_group":"Not Applicable","lifecycle":"Seasonal","revenue":844.0,"units":35,"asp":24.11},{"year":"2025","prod_group":"Pant","lifecycle":"Carryover","revenue":1683.493,"units":40,"asp":42.09},{"year":"2025","prod_group":"Photo Reel","lifecycle":"Carryover","revenue":212012.13999999998,"units":8985,"asp":23.6},{"year":"2025","prod_group":"Photo Reel","lifecycle":"Seasonal","revenue":25989.252,"units":1842,"asp":14.11},{"year":"2025","prod_group":"Print","lifecycle":"Carryover","revenue":36747.922,"units":1548,"asp":23.74},{"year":"2025","prod_group":"Print","lifecycle":"Seasonal","revenue":3321.0,"units":169,"asp":19.65},{"year":"2025","prod_group":"Shirt","lifecycle":"Carryover","revenue":200.0,"units":4,"asp":50.0},{"year":"2025","prod_group":"Shirt","lifecycle":"Seasonal","revenue":216.0,"units":4,"asp":54.0},{"year":"2025","prod_group":"Solid","lifecycle":"Carryover","revenue":823613.6745,"units":43678,"asp":18.86},{"year":"2025","prod_group":"Solid","lifecycle":"Seasonal","revenue":5291.6585000000005,"units":181,"asp":29.24},{"year":"2025","prod_group":"Towel","lifecycle":"Carryover","revenue":748.0,"units":22,"asp":34.0},{"year":"2025","prod_group":"Urban/Street","lifecycle":"Carryover","revenue":449091.7675,"units":19251,"asp":23.33},{"year":"2025","prod_group":"Urban/Street","lifecycle":"Seasonal","revenue":264842.459,"units":12418,"asp":21.33},{"year":"2026","prod_group":"Accessories","lifecycle":"Carryover","revenue":917.0,"units":36,"asp":25.47},{"year":"2026","prod_group":"Animal","lifecycle":"Carryover","revenue":6930.44,"units":320,"asp":21.66},{"year":"2026","prod_group":"Animal","lifecycle":"Seasonal","revenue":24223.552,"units":1258,"asp":19.26},{"year":"2026","prod_group":"Beanie","lifecycle":"Carryover","revenue":1053.65,"units":40,"asp":26.34},{"year":"2026","prod_group":"City Scape","lifecycle":"Carryover","revenue":358.7,"units":22,"asp":16.3},{"year":"2026","prod_group":"City Scape","lifecycle":"Seasonal","revenue":3355.0,"units":145,"asp":23.14},{"year":"2026","prod_group":"Collab","lifecycle":"Carryover","revenue":28440.6775,"units":1279,"asp":22.24},{"year":"2026","prod_group":"Collab","lifecycle":"Seasonal","revenue":4356.849,"units":187,"asp":23.3},{"year":"2026","prod_group":"DNA","lifecycle":"Carryover","revenue":47740.133499999996,"units":2201,"asp":21.69},{"year":"2026","prod_group":"DNA","lifecycle":"Seasonal","revenue":87621.774,"units":4537,"asp":19.31},{"year":"2026","prod_group":"Embossed","lifecycle":"Carryover","revenue":2919.75,"units":124,"asp":23.55},{"year":"2026","prod_group":"Event","lifecycle":"Carryover","revenue":3465.9985,"units":141,"asp":24.58},{"year":"2026","prod_group":"Event","lifecycle":"Seasonal","revenue":21095.28,"units":998,"asp":21.14},{"year":"2026","prod_group":"Floral","lifecycle":"Carryover","revenue":979.0,"units":55,"asp":17.8},{"year":"2026","prod_group":"Floral","lifecycle":"Seasonal","revenue":26700.089,"units":1280,"asp":20.86},{"year":"2026","prod_group":"Not Applicable","lifecycle":"Carryover","revenue":8010.39,"units":807,"asp":9.93},{"year":"2026","prod_group":"Not Applicable","lifecycle":"Seasonal","revenue":7986.943,"units":421,"asp":18.97},{"year":"2026","prod_group":"Pant","lifecycle":"Carryover","revenue":588.0,"units":14,"asp":42.0},{"year":"2026","prod_group":"Photo Reel","lifecycle":"Carryover","revenue":6016.34,"units":264,"asp":22.79},{"year":"2026","prod_group":"Photo Reel","lifecycle":"Seasonal","revenue":3988.75,"units":206,"asp":19.36},{"year":"2026","prod_group":"Print","lifecycle":"Carryover","revenue":1105.166,"units":35,"asp":31.58},{"year":"2026","prod_group":"Print","lifecycle":"Seasonal","revenue":9589.28,"units":489,"asp":19.61},{"year":"2026","prod_group":"Shirt","lifecycle":"Carryover","revenue":116.0,"units":2,"asp":58.0},{"year":"2026","prod_group":"Solid","lifecycle":"Carryover","revenue":251406.286,"units":13914,"asp":18.07},{"year":"2026","prod_group":"Solid","lifecycle":"Seasonal","revenue":150.0,"units":5,"asp":30.0},{"year":"2026","prod_group":"Towel","lifecycle":"Carryover","revenue":222.0,"units":10,"asp":22.2},{"year":"2026","prod_group":"Towel","lifecycle":"Seasonal","revenue":44.0,"units":1,"asp":44.0},{"year":"2026","prod_group":"Urban/Street","lifecycle":"Carryover","revenue":50640.9085,"units":2269,"asp":22.32},{"year":"2026","prod_group":"Urban/Street","lifecycle":"Seasonal","revenue":245699.744,"units":12139,"asp":20.24}],"gap_styles":["UMS211","UBS744","UMS1054","UMS1649","UMS223","UMS1658","UMS1651","UMM1076","UMS1640","UMS1641","UMS657","UMS228","UBS1037","UBS1651","UBS1645","UBS1658","UBS1649","UBS1641","UBS721","UMS1645","UBS1640","UBS348","UMM690","UMM1658","UBS1212","UMM1640","UMM1649","UMM1641","UMM1665","UMS1142"],"gap_available":[45.0,148.0,291.0,393.0,36.0,46.0,293.0,205.0,329.0,61.0,405.0,2.0,65.0,1.0,3.0,106.0,109.0,86.0,14.0,672.0,1.0,197.0,59.0,11.0,157.0,5.0,0.0,35.0,5.0,865.0],"gap_needed":[2215.0,2080.0,1681.0,1623.0,1081.0,1085.0,1274.0,1168.0,1252.0,977.0,1318.0,911.0,895.0,785.0,685.0,779.0,778.0,754.0,670.0,1320.0,637.0,787.0,640.0,586.0,712.0,529.0,507.0,529.0,451.0,1304.0],"gap_division":["Mens","Boys","Mens","Mens","Mens","Mens","Mens","Mens","Mens","Mens","Mens","Mens","Boys","Boys","Boys","Boys","Boys","Boys","Boys","Mens","Boys","Boys","Mens","Mens","Boys","Mens","Mens","Mens","Mens","Mens"],"gap_by_div":[{"division":"Boys","total_gap":10075.0,"styles":20},{"division":"Mens","total_gap":19092.0,"styles":42},{"division":"Womens","total_gap":17.0,"styles":3}],"gap_top30":[{"style":"UMS211","division":"Mens","available":45.0,"shipped_t30":429.0,"daily_vel":14.3,"units_2024":8860.0,"monthly_vel_2024":738.3,"needed_3mo":2215.0,"stock_gap":2170.0},{"style":"UBS744","division":"Boys","available":148.0,"shipped_t30":556.0,"daily_vel":18.533,"units_2024":8319.0,"monthly_vel_2024":693.2,"needed_3mo":2080.0,"stock_gap":1932.0},{"style":"UMS1054","division":"Mens","available":291.0,"shipped_t30":158.0,"daily_vel":5.267,"units_2024":6724.0,"monthly_vel_2024":560.3,"needed_3mo":1681.0,"stock_gap":1390.0},{"style":"UMS1649","division":"Mens","available":393.0,"shipped_t30":264.0,"daily_vel":8.8,"units_2024":6493.0,"monthly_vel_2024":541.1,"needed_3mo":1623.0,"stock_gap":1230.0},{"style":"UMS223","division":"Mens","available":36.0,"shipped_t30":213.0,"daily_vel":7.1,"units_2024":4324.0,"monthly_vel_2024":360.3,"needed_3mo":1081.0,"stock_gap":1045.0},{"style":"UMS1658","division":"Mens","available":46.0,"shipped_t30":107.0,"daily_vel":3.567,"units_2024":4341.0,"monthly_vel_2024":361.8,"needed_3mo":1085.0,"stock_gap":1039.0},{"style":"UMS1651","division":"Mens","available":293.0,"shipped_t30":105.0,"daily_vel":3.5,"units_2024":5097.0,"monthly_vel_2024":424.8,"needed_3mo":1274.0,"stock_gap":981.0},{"style":"UMM1076","division":"Mens","available":205.0,"shipped_t30":213.0,"daily_vel":7.1,"units_2024":4674.0,"monthly_vel_2024":389.5,"needed_3mo":1168.0,"stock_gap":963.0},{"style":"UMS1640","division":"Mens","available":329.0,"shipped_t30":98.0,"daily_vel":3.267,"units_2024":5010.0,"monthly_vel_2024":417.5,"needed_3mo":1252.0,"stock_gap":923.0},{"style":"UMS1641","division":"Mens","available":61.0,"shipped_t30":112.0,"daily_vel":3.733,"units_2024":3909.0,"monthly_vel_2024":325.8,"needed_3mo":977.0,"stock_gap":916.0},{"style":"UMS657","division":"Mens","available":405.0,"shipped_t30":60.0,"daily_vel":2.0,"units_2024":5273.0,"monthly_vel_2024":439.4,"needed_3mo":1318.0,"stock_gap":913.0},{"style":"UMS228","division":"Mens","available":2.0,"shipped_t30":43.0,"daily_vel":1.433,"units_2024":3645.0,"monthly_vel_2024":303.8,"needed_3mo":911.0,"stock_gap":909.0},{"style":"UBS1037","division":"Boys","available":65.0,"shipped_t30":30.0,"daily_vel":1.0,"units_2024":3578.0,"monthly_vel_2024":298.2,"needed_3mo":895.0,"stock_gap":830.0},{"style":"UBS1651","division":"Boys","available":1.0,"shipped_t30":95.0,"daily_vel":3.167,"units_2024":3140.0,"monthly_vel_2024":261.7,"needed_3mo":785.0,"stock_gap":784.0},{"style":"UBS1645","division":"Boys","available":3.0,"shipped_t30":112.0,"daily_vel":3.733,"units_2024":2739.0,"monthly_vel_2024":228.2,"needed_3mo":685.0,"stock_gap":682.0},{"style":"UBS1658","division":"Boys","available":106.0,"shipped_t30":206.0,"daily_vel":6.867,"units_2024":3116.0,"monthly_vel_2024":259.7,"needed_3mo":779.0,"stock_gap":673.0},{"style":"UBS1649","division":"Boys","available":109.0,"shipped_t30":179.0,"daily_vel":5.967,"units_2024":3114.0,"monthly_vel_2024":259.5,"needed_3mo":778.0,"stock_gap":669.0},{"style":"UBS1641","division":"Boys","available":86.0,"shipped_t30":113.0,"daily_vel":3.767,"units_2024":3015.0,"monthly_vel_2024":251.2,"needed_3mo":754.0,"stock_gap":668.0},{"style":"UBS721","division":"Boys","available":14.0,"shipped_t30":110.0,"daily_vel":3.667,"units_2024":2682.0,"monthly_vel_2024":223.5,"needed_3mo":670.0,"stock_gap":656.0},{"style":"UMS1645","division":"Mens","available":672.0,"shipped_t30":29.0,"daily_vel":0.967,"units_2024":5281.0,"monthly_vel_2024":440.1,"needed_3mo":1320.0,"stock_gap":648.0},{"style":"UBS1640","division":"Boys","available":1.0,"shipped_t30":21.0,"daily_vel":0.7,"units_2024":2548.0,"monthly_vel_2024":212.3,"needed_3mo":637.0,"stock_gap":636.0},{"style":"UBS348","division":"Boys","available":197.0,"shipped_t30":72.0,"daily_vel":2.4,"units_2024":3147.0,"monthly_vel_2024":262.2,"needed_3mo":787.0,"stock_gap":590.0},{"style":"UMM690","division":"Mens","available":59.0,"shipped_t30":47.0,"daily_vel":1.567,"units_2024":2562.0,"monthly_vel_2024":213.5,"needed_3mo":640.0,"stock_gap":581.0},{"style":"UMM1658","division":"Mens","available":11.0,"shipped_t30":81.0,"daily_vel":2.7,"units_2024":2344.0,"monthly_vel_2024":195.3,"needed_3mo":586.0,"stock_gap":575.0},{"style":"UBS1212","division":"Boys","available":157.0,"shipped_t30":129.0,"daily_vel":4.3,"units_2024":2848.0,"monthly_vel_2024":237.3,"needed_3mo":712.0,"stock_gap":555.0},{"style":"UMM1640","division":"Mens","available":5.0,"shipped_t30":5.0,"daily_vel":0.167,"units_2024":2115.0,"monthly_vel_2024":176.2,"needed_3mo":529.0,"stock_gap":524.0},{"style":"UMM1649","division":"Mens","available":0.0,"shipped_t30":5.0,"daily_vel":0.167,"units_2024":2027.0,"monthly_vel_2024":168.9,"needed_3mo":507.0,"stock_gap":507.0},{"style":"UMM1641","division":"Mens","available":35.0,"shipped_t30":10.0,"daily_vel":0.333,"units_2024":2117.0,"monthly_vel_2024":176.4,"needed_3mo":529.0,"stock_gap":494.0},{"style":"UMM1665","division":"Mens","available":5.0,"shipped_t30":1.0,"daily_vel":0.033,"units_2024":1803.0,"monthly_vel_2024":150.2,"needed_3mo":451.0,"stock_gap":446.0},{"style":"UMS1142","division":"Mens","available":865.0,"shipped_t30":27.0,"daily_vel":0.9,"units_2024":5218.0,"monthly_vel_2024":434.8,"needed_3mo":1304.0,"stock_gap":439.0}],"top_sku_list":[{"year":"2024","sku":"UBS744-BKK-XL","revenue":49782.799999999996,"units":4012,"promo":688.52,"asp":12.41,"division":"Boys","cat_desc":"Boys Staple","prod_group":"Solid","lifecycle":""},{"year":"2024","sku":"UMS211-BKK-L","revenue":59664.309,"units":2689,"promo":425.3,"asp":22.19,"division":"Mens","cat_desc":"Mens Staple","prod_group":"Solid","lifecycle":""},{"year":"2024","sku":"UMS211-BKK-M","revenue":57456.3215,"units":2583,"promo":447.89,"asp":22.24,"division":"Mens","cat_desc":"Mens Staple","prod_group":"Solid","lifecycle":""},{"year":"2024","sku":"UMS1054-RED-M","revenue":32880.1485,"units":2306,"promo":305.24,"asp":14.26,"division":"Mens","cat_desc":"Mens Staple","prod_group":"Solid","lifecycle":""},{"year":"2024","sku":"UBS744-BKK-L","revenue":27892.788,"units":2269,"promo":234.76000000000002,"asp":12.29,"division":"Boys","cat_desc":"Boys Staple","prod_group":"Solid","lifecycle":""},{"year":"2024","sku":"UMS1649-MAR-M","revenue":31671.8,"units":2115,"promo":296.49,"asp":14.97,"division":"Mens","cat_desc":"Mens Staple","prod_group":"Solid","lifecycle":""},{"year":"2024","sku":"UMS1649-MAR-L","revenue":28300.269,"units":1907,"promo":253.73,"asp":14.84,"division":"Mens","cat_desc":"Mens Staple","prod_group":"Solid","lifecycle":""},{"year":"2024","sku":"UMS1640-WHB-M","revenue":30244.423,"units":1852,"promo":240.59,"asp":16.33,"division":"Mens","cat_desc":"Mens Staple","prod_group":"Solid","lifecycle":""},{"year":"2024","sku":"UMS1054-RED-L","revenue":27091.252,"units":1847,"promo":239.53,"asp":14.67,"division":"Mens","cat_desc":"Mens Staple","prod_group":"Solid","lifecycle":""},{"year":"2024","sku":"UMS1142-YLW-M","revenue":25402.52,"units":1769,"promo":190.35,"asp":14.36,"division":"Mens","cat_desc":"Mens Staple","prod_group":"Solid","lifecycle":""},{"year":"2024","sku":"UMS1429-ORG-M","revenue":24872.254,"units":1769,"promo":214.73999999999998,"asp":14.06,"division":"Mens","cat_desc":"Mens Staple","prod_group":"Solid","lifecycle":""},{"year":"2024","sku":"UMM1076-BLK-M","revenue":30985.129,"units":1734,"promo":301.71,"asp":17.87,"division":"Mens","cat_desc":"Mens Mid","prod_group":"Solid","lifecycle":""},{"year":"2024","sku":"UMS1645-BRD-L","revenue":24787.382,"units":1703,"promo":180.54,"asp":14.56,"division":"Mens","cat_desc":"Mens Staple","prod_group":"Solid","lifecycle":""},{"year":"2024","sku":"MLUS2548-BGN-M","revenue":33696.0775,"units":1679,"promo":354.78000000000003,"asp":20.07,"division":"Mens","cat_desc":"Mens Staple","prod_group":"Animal","lifecycle":""},{"year":"2024","sku":"UMS657-BLK-M","revenue":24041.458,"units":1635,"promo":267.03,"asp":14.7,"division":"Mens","cat_desc":"Mens Staple","prod_group":"Solid","lifecycle":""},{"year":"2024","sku":"UMS1654-PRP-M","revenue":24911.458,"units":1577,"promo":214.82,"asp":15.8,"division":"Mens","cat_desc":"Mens Staple","prod_group":"Solid","lifecycle":""},{"year":"2024","sku":"UMS211-BKK-S","revenue":34623.5185,"units":1555,"promo":389.85,"asp":22.27,"division":"Mens","cat_desc":"Mens Staple","prod_group":"Solid","lifecycle":""},{"year":"2024","sku":"UMS1651-BLU-M","revenue":25894.695,"units":1534,"promo":268.36,"asp":16.88,"division":"Mens","cat_desc":"Mens Staple","prod_group":"Solid","lifecycle":""},{"year":"2024","sku":"UMS1142-YLW-L","revenue":21571.8995,"units":1503,"promo":190.67,"asp":14.35,"division":"Mens","cat_desc":"Mens Staple","prod_group":"Solid","lifecycle":""},{"year":"2024","sku":"UBS744-BKK-M","revenue":18308.6475,"units":1479,"promo":144.69,"asp":12.38,"division":"Boys","cat_desc":"Boys Staple","prod_group":"Solid","lifecycle":""}]};
+
+// ── helpers ─────────────────────────────────────────────────────────────
+function fmt(n){if(!n||n===0)return'$0';return n>=1e6?'$'+(n/1e6).toFixed(2)+'M':n>=1e3?'$'+(n/1e3).toFixed(0)+'k':'$'+n.toFixed(0)}
+function pct(a,b){if(!b)return'—';return(((a-b)/b)*100).toFixed(1)+'%'}
+
+// ── Chart.js defaults ────────────────────────────────────────────────────
+Chart.defaults.color='#94a3b8';
+Chart.defaults.borderColor='#1e293b';
+const C24='#3b82f6', C25='#f59e0b', C26='#10b981', MN=D.months;
+
+function mk(id,type,labels,datasets,extraOpts){
+  const opts=Object.assign({
+    responsive:true,animation:{duration:300},
+    plugins:{legend:{display:datasets.length>1,labels:{boxWidth:12,font:{size:11}}}},
+    scales:{x:{grid:{color:'#1e293b'}},y:{grid:{color:'#1e293b'}}}
+  }, extraOpts||{});
+  return new Chart(document.getElementById(id),{type,data:{labels,datasets},options:opts});
+}
+
+// ── lazy init registry ──────────────────────────────────────────────────
+var _inited = {};
+
+function show(id, btn){
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+  if(!_inited[id]){
+    _inited[id]=true;
+    if(id==='mo') initMo();
+    else if(id==='dv') initDv();
+    else if(id==='as') initAs();
+    else if(id==='pr') initPr();
+    else if(id==='iv') initIv();
+  }
+}
+
+// ── Overview charts (init on page load) ─────────────────────────────────
+const o=D.overall;
+document.getElementById('kpi-row').innerHTML=[
+  {cls:'',lbl:'2024 Full Year',rev:o['2024'].rev,units:o['2024'].units,asp:o['2024'].asp,promo:o['2024'].promo,badge:''},
+  {cls:'y25',lbl:'2025 Full Year',rev:o['2025'].rev,units:o['2025'].units,asp:o['2025'].asp,promo:o['2025'].promo,
+   badge:`<span class="badge dn">${pct(o['2025'].rev,o['2024'].rev)} vs 2024</span>`},
+  {cls:'y26',lbl:'2026 YTD Jan–May',rev:o['2026'].rev,units:o['2026'].units,asp:o['2026'].asp,promo:o['2026'].promo,
+   badge:`<span class="badge dn">${pct(o['2026'].rev,o['2025'].rev/12*5)} vs 2025 pace</span>`},
+].map(r=>`<div class="kpi ${r.cls}">
+  <div class="lbl">${r.lbl}</div>
+  <div class="val">${fmt(r.rev)}</div>
+  <div class="sm">${r.units.toLocaleString()} units · ASP $${r.asp}</div>
+  <div class="sm">Promo: ${fmt(r.promo)}</div>
+  ${r.badge}
+</div>`).join('');
+
+mk('c-arev','bar',['2024','2025','2026 YTD'],[
+  {label:'Revenue',data:[o['2024'].rev,o['2025'].rev,o['2026'].rev],
+   backgroundColor:[C24,C25,C26],borderRadius:6}
+],{plugins:{legend:{display:false}},scales:{x:{grid:{color:'#1e293b'}},y:{grid:{color:'#1e293b'},ticks:{callback:v=>fmt(v)}}}});
+
+new Chart(document.getElementById('c-uasp'),{type:'bar',
+  data:{labels:['2024','2025','2026 YTD'],datasets:[
+    {label:'Units',data:[o['2024'].units,o['2025'].units,o['2026'].units],
+     backgroundColor:[C24,C25,C26],borderRadius:6,yAxisID:'y'},
+    {label:'ASP ($)',data:[o['2024'].asp,o['2025'].asp,o['2026'].asp],
+     type:'line',borderColor:'#f43f5e',borderWidth:2.5,pointRadius:6,yAxisID:'y2'}
+  ]},
+  options:{responsive:true,animation:{duration:300},
+    scales:{
+      x:{grid:{color:'#1e293b'}},
+      y:{position:'left',grid:{color:'#1e293b'},ticks:{callback:v=>v>=1000?v/1000+'k':v}},
+      y2:{position:'right',grid:{display:false},ticks:{callback:v=>'$'+v}}
+    },
+    plugins:{legend:{display:true,labels:{boxWidth:12,font:{size:11}}}}}
+});
+
+// ── Monthly ───────────────────────────────────────────────────────────────
+function initMo(){
+  new Chart(document.getElementById('c-mrev'),{type:'line',
+    data:{labels:MN,datasets:[
+      {label:'2024',data:D.rev24,borderColor:C24,backgroundColor:C24+'22',fill:true,tension:.35,borderWidth:2.5,pointRadius:3},
+      {label:'2025',data:D.rev25,borderColor:C25,backgroundColor:C25+'22',fill:true,tension:.35,borderWidth:2.5,pointRadius:3},
+      {label:'2026',data:D.rev26,borderColor:C26,backgroundColor:C26+'22',fill:true,tension:.35,borderWidth:2.5,pointRadius:3},
+    ]},
+    options:{responsive:true,animation:{duration:300},
+      scales:{x:{grid:{color:'#1e293b'}},y:{grid:{color:'#1e293b'},ticks:{callback:v=>fmt(v)}}},
+      plugins:{legend:{display:true,labels:{boxWidth:12,font:{size:11}}}}}
+  });
+
+  new Chart(document.getElementById('c-muni'),{type:'line',
+    data:{labels:MN,datasets:[
+      {label:'2024',data:D.units24,borderColor:C24,tension:.35,borderWidth:2,pointRadius:3},
+      {label:'2025',data:D.units25,borderColor:C25,tension:.35,borderWidth:2,pointRadius:3},
+      {label:'2026',data:D.units26,borderColor:C26,tension:.35,borderWidth:2,pointRadius:3},
+    ]},
+    options:{responsive:true,animation:{duration:300},
+      scales:{x:{grid:{color:'#1e293b'}},y:{grid:{color:'#1e293b'},ticks:{callback:v=>v>=1000?v/1000+'k':v}}},
+      plugins:{legend:{display:true,labels:{boxWidth:12,font:{size:11}}}}}
+  });
+
+  const avg24=D.rev24.reduce(function(a,b){return a+b},0)/12;
+  const idx=D.rev24.map(function(v){return Math.round(v/avg24*100)});
+  mk('c-midx','bar',MN,[
+    {label:'% of avg month',data:idx,
+     backgroundColor:idx.map(function(v){return v>=130?'#22c55e':v>=100?C24:'#475569'}),borderRadius:4}
+  ],{plugins:{legend:{display:false}},scales:{x:{grid:{color:'#1e293b'}},y:{grid:{color:'#1e293b'},ticks:{callback:function(v){return v+'%'}}}}});
+}
+
+// ── Division ─────────────────────────────────────────────────────────────
+function initDv(){
+  var DV=['Mens','Boys','Womens'];
+  mk('c-drev','bar',DV,[
+    {label:'2024',data:DV.map(function(d){return D.div_rev['2024'][d]||0}),backgroundColor:C24,borderRadius:4},
+    {label:'2025',data:DV.map(function(d){return D.div_rev['2025'][d]||0}),backgroundColor:C25,borderRadius:4},
+    {label:'2026',data:DV.map(function(d){return D.div_rev['2026'][d]||0}),backgroundColor:C26,borderRadius:4},
+  ],{scales:{x:{grid:{color:'#1e293b'}},y:{grid:{color:'#1e293b'},ticks:{callback:function(v){return fmt(v)}}}}});
+
+  var lc=D.lc_div;
+  function glc(yr,div,l){var r=lc.find(function(x){return x.year==yr&&x.division==div&&x.lifecycle==l});return r?r.revenue:0}
+  mk('c-mlc','bar',['Carryover 2024','Carryover 2025','Seasonal 2024','Seasonal 2025'],[
+    {label:'Revenue',data:[glc('2024','Mens','Carryover'),glc('2025','Mens','Carryover'),glc('2024','Mens','Seasonal'),glc('2025','Mens','Seasonal')],
+     backgroundColor:[C24,C25,C24+'88',C25+'88'],borderRadius:4}
+  ],{plugins:{legend:{display:false}},scales:{x:{grid:{color:'#1e293b'}},y:{grid:{color:'#1e293b'},ticks:{callback:function(v){return fmt(v)}}}}});
+
+  mk('c-blc','bar',['Carryover 2024','Carryover 2025','Seasonal 2024','Seasonal 2025'],[
+    {label:'Revenue',data:[glc('2024','Boys','Carryover'),glc('2025','Boys','Carryover'),glc('2024','Boys','Seasonal'),glc('2025','Boys','Seasonal')],
+     backgroundColor:[C24,C25,C24+'88',C25+'88'],borderRadius:4}
+  ],{plugins:{legend:{display:false}},scales:{x:{grid:{color:'#1e293b'}},y:{grid:{color:'#1e293b'},ticks:{callback:function(v){return fmt(v)}}}}});
+
+  var AG=D.asp_grid;
+  mk('c-aspg','bar',['Mens Carry.','Mens Seas.','Boys Carry.','Boys Seas.'],[
+    {label:'2024',data:[AG[0][1],AG[1][1],AG[0][2],AG[1][2]],backgroundColor:C24,borderRadius:4},
+    {label:'2025',data:[AG[2][1],AG[3][1],AG[2][2],AG[3][2]],backgroundColor:C25,borderRadius:4},
+    {label:'2026',data:[AG[4][1],AG[5][1],AG[4][2],AG[5][2]],backgroundColor:C26,borderRadius:4},
+  ],{scales:{x:{grid:{color:'#1e293b'}},y:{grid:{color:'#1e293b'},ticks:{callback:function(v){return'$'+v}}}}});
+}
+
+// ── ASP ───────────────────────────────────────────────────────────────────
+function initAs(){
+  var AG=D.asp_grid;
+  mk('c-adl','bar',['Mens Carry.','Mens Seas.','Boys Carry.','Boys Seas.'],[
+    {label:'2024',data:[AG[0][1],AG[1][1],AG[0][2],AG[1][2]],backgroundColor:C24,borderRadius:4},
+    {label:'2025',data:[AG[2][1],AG[3][1],AG[2][2],AG[3][2]],backgroundColor:C25,borderRadius:4},
+    {label:'2026',data:[AG[4][1],AG[5][1],AG[4][2],AG[5][2]],backgroundColor:C26,borderRadius:4},
+  ],{scales:{x:{grid:{color:'#1e293b'}},y:{grid:{color:'#1e293b'},ticks:{callback:function(v){return'$'+v}}}}});
+
+  new Chart(document.getElementById('c-pvu'),{type:'scatter',
+    data:{datasets:[
+      {label:'2024',data:[{x:o['2024'].asp,y:o['2024'].units}],backgroundColor:C24,pointRadius:14},
+      {label:'2025',data:[{x:o['2025'].asp,y:o['2025'].units}],backgroundColor:C25,pointRadius:14},
+      {label:'2026 YTD',data:[{x:o['2026'].asp,y:o['2026'].units}],backgroundColor:C26,pointRadius:10},
+    ]},
+    options:{responsive:true,animation:{duration:300},
+      scales:{
+        x:{title:{display:true,text:'ASP ($)',color:'#94a3b8'},grid:{color:'#1e293b'},ticks:{callback:function(v){return'$'+v}}},
+        y:{title:{display:true,text:'Units Sold',color:'#94a3b8'},grid:{color:'#1e293b'},ticks:{callback:function(v){return v>=1000?v/1000+'k':v}}}
+      },
+      plugins:{legend:{display:true,labels:{boxWidth:12,font:{size:11}}}}}
+  });
+
+  var ap=D.asp_pg;
+  var pgs=[...new Set(ap.map(function(r){return r.prod_group}))].filter(function(p){return p&&!['null','Unknown','Not Applicable',''].includes(String(p))}).slice(0,13);
+  function gapg(yr,pg){var r=ap.find(function(x){return x.year==yr&&x.prod_group==pg});return r?r.asp:null}
+  mk('c-apg','bar',pgs,[
+    {label:'2024',data:pgs.map(function(p){return gapg('2024',p)}),backgroundColor:C24,borderRadius:4},
+    {label:'2025',data:pgs.map(function(p){return gapg('2025',p)}),backgroundColor:C25,borderRadius:4},
+    {label:'2026',data:pgs.map(function(p){return gapg('2026',p)}),backgroundColor:C26,borderRadius:4},
+  ],{scales:{x:{grid:{color:'#1e293b'},ticks:{maxRotation:30}},y:{grid:{color:'#1e293b'},ticks:{callback:function(v){return v?'$'+v:null}}}}});
+}
+
+// ── Promotions ────────────────────────────────────────────────────────────
+function initPr(){
+  new Chart(document.getElementById('c-ppc'),{type:'line',
+    data:{labels:MN,datasets:[
+      {label:'2024 %',data:D.promo_pct24,borderColor:C24,tension:.3,borderWidth:2.5,pointRadius:3},
+      {label:'2025 %',data:D.promo_pct25,borderColor:C25,tension:.3,borderWidth:2.5,pointRadius:3},
+      {label:'2026 %',data:D.promo_pct26,borderColor:C26,tension:.3,borderWidth:2.5,pointRadius:3},
+    ]},
+    options:{responsive:true,animation:{duration:300},
+      scales:{x:{grid:{color:'#1e293b'}},y:{grid:{color:'#1e293b'},ticks:{callback:function(v){return v+'%'}}}},
+      plugins:{legend:{display:true,labels:{boxWidth:12,font:{size:11}}}}}
+  });
+
+  new Chart(document.getElementById('c-ppu'),{type:'line',
+    data:{labels:MN,datasets:[
+      {label:'2024 $/unit',data:D.promo_pu24,borderColor:C24,tension:.3,borderWidth:2.5,pointRadius:3},
+      {label:'2025 $/unit',data:D.promo_pu25,borderColor:C25,tension:.3,borderWidth:2.5,pointRadius:3},
+    ]},
+    options:{responsive:true,animation:{duration:300},
+      scales:{x:{grid:{color:'#1e293b'}},y:{grid:{color:'#1e293b'},ticks:{callback:function(v){return'$'+v}}}},
+      plugins:{legend:{display:true,labels:{boxWidth:12,font:{size:11}}}}}
+  });
+}
+
+// ── Inventory ─────────────────────────────────────────────────────────────
+function initIv(){
+  var gs=D.gap_styles, ga=D.gap_available, gn=D.gap_needed, gd=D.gap_division;
+  var gcols=gd.map(function(d){return d==='Mens'?C24+'99':C26+'99'});
+  new Chart(document.getElementById('c-igap'),{type:'bar',
+    data:{labels:gs,datasets:[
+      {label:'Available',data:ga,backgroundColor:'#22c55e88',borderRadius:2},
+      {label:'3-Mo Need (2024 pace)',data:gn,backgroundColor:gcols,borderRadius:2},
+    ]},
+    options:{indexAxis:'y',responsive:true,animation:{duration:300},
+      scales:{x:{grid:{color:'#1e293b'}},y:{grid:{color:'#1e293b'},ticks:{font:{size:11}}}},
+      plugins:{legend:{display:true,labels:{boxWidth:12,font:{size:11}}}}}
+  });
+
+  var gbd=D.gap_by_div||[];
+  mk('c-idiv','bar',gbd.map(function(r){return r.division}),[
+    {label:'Unit Gap',data:gbd.map(function(r){return r.total_gap}),
+     backgroundColor:[C24,C26,'#f59e0b','#8b5cf6'],borderRadius:6}
+  ],{plugins:{legend:{display:false}},scales:{x:{grid:{color:'#1e293b'}},y:{grid:{color:'#1e293b'},ticks:{callback:function(v){return v.toLocaleString()}}}}});
+
+  var tbl=document.getElementById('inv-tbl');
+  var gaps=D.gap_top30||[];
+  tbl.innerHTML='<tr><th>Style</th><th>Division</th><th>Available</th><th>3-Mo Need</th><th>Gap</th><th>Daily Vel</th></tr>'+
+  gaps.slice(0,20).map(function(r){
+    var g=+(r.stock_gap||0);
+    var s=g>150?'color:#ef4444;font-weight:700':g>75?'color:#f59e0b':'';
+    var t=r.division==='Mens'?'tm':r.division==='Boys'?'tb':'';
+    return '<tr><td><b>'+(r.style||'')+'</b></td><td><span class="tag '+t+'">'+(r.division||'')+'</span></td><td>'+(+(r.available||0)).toLocaleString()+'</td><td>'+(+(r.needed_3mo||0)).toLocaleString()+'</td><td style="'+s+'">'+g.toLocaleString()+'</td><td>'+(+(r.daily_vel||0)).toFixed(1)+'/day</td></tr>';
+  }).join('');
+}
+</script>
+</body>
+</html>
